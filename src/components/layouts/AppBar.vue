@@ -57,12 +57,11 @@
     <!-- We have a second non compact app-bar for middle and up screens
      we use it for main actions with our app -->
 
-    <v-app-bar elevation="0" color="">
+    <v-app-bar elevation="0" color="" v-if="$vuetify.display.mdAndUp">
 
       <!-- Now we create a second app-bar for middle and up screens-->
 
       <v-container
-        v-if="$vuetify.display.mdAndUp"
         class="d-flex justify-center align-center text-black"
       >
         <v-icon size="large" class="mr-6">mdi-creation-outline</v-icon>
@@ -142,26 +141,10 @@
       </v-container>
 
       <!-- Up here ends second app-bar for middle and up screens
-       and down here we start to create this for a mobile version-->
+       and down here we start to create this for a mobile version BUT
+       BUT we do it in footer for mobile version, so check FooterBar
+       in layouts -->
 
-      <v-container v-else class="d-flex justify-space-evenly align-center text-black">
-        <div class="d-flex justify-center align-center flex-column">
-          <v-btn icon="mdi-cog-outline" variant="text" size="small"></v-btn>
-          <p class="text-captions mt-n2">Транзит</p>
-        </div>
-        <div class="d-flex justify-center align-center flex-column">
-          <v-btn icon="mdi-plus-circle-outline" variant="text" size="small"></v-btn>
-          <p class="text-captions mt-n2">Расчёт</p>
-        </div>
-        <div class="d-flex justify-center align-center flex-column">
-          <v-btn icon="mdi-cart-outline" variant="text" size="small"></v-btn>
-          <p class="text-captions mt-n2">Купить</p>
-        </div>
-        <div class="d-flex justify-center align-center flex-column">
-          <v-btn icon="mdi-human-male" variant="text" size="small"></v-btn>
-          <p class="text-captions mt-n2">Кабинет</p>
-        </div>
-      </v-container>
     </v-app-bar>
   </v-container>
 </template>

@@ -1,6 +1,6 @@
 <template>
-  <v-container fluid class="d-flex justify-center align-center">
-    <v-text class="text-h3 text-uppercase">Дизайн Человека</v-text>
+  <v-container v-if="$vuetify.display.mdAndUp" fluid class="d-flex justify-center align-center">
+    <v-text class="text-h3 montserrat">Дизайн Человека</v-text>
   </v-container>
 </template>
 
@@ -8,6 +8,8 @@
 
 </script>
 
-<style>
-
+<style scoped>
+.montserrat {
+  font-family: 'Montserrat', sans-serif;
+}
 </style>

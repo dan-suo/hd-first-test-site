@@ -1,5 +1,5 @@
 <template>
-  <v-footer app class="gradient-footer" >
+  <v-footer class="gradient-footer" >
 
     <!-- Firstly crete a container for mobile version
      of footer, it will be complitely different

@@ -11,7 +11,7 @@
 import { ref, onMounted, onUnmounted, computed, watch } from "vue";
 
 const props = defineProps({
-  width: { type: Number, default: 500 },
+  width: { type: Number, default: 300 },
   height: { type: Number, default: 250 },
 });
 
@@ -87,7 +87,7 @@ function updateMouse(event) {
 onMounted(() => {
   const canvas = canvasRef.value;
   ctx = canvas.getContext("2d");
-  canvas.width = 500;
+  canvas.width = 300;
   canvas.height = 250;
   createStars();
   animate();

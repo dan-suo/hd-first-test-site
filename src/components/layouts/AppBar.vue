@@ -158,3 +158,9 @@ const menuList = [
   { title: "Выйти" },
 ];
 </script>
+
+<style scoped>
+.sky-violet {
+  background: rgba(119, 89, 202, 1);
+}
+</style>

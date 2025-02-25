@@ -12,5 +12,4 @@
 import { RouterView } from "vue-router";
 import AppBar from "./components/layouts/AppBar.vue";
 import FooterBar from "./components/layouts/FooterBar.vue";
-
 </script>

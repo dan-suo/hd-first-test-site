@@ -1,61 +1,42 @@
 <template>
-  <v-container
-    v-if="$vuetify.display.mdAndUp"
-    fluid
-    class="d-flex justify-center align-center"
-  >
-    <v-text class="text-h3 montserrat">Дизайн Человека</v-text>
-    <v-btn class="ml-6" color="primary" @click="createNewPost">New Post</v-btn>
-    <v-list v-if="posts">
-      <v-list-item
-        v-for="post in posts"
-        :key="post._id"
+  <v-container v-if="$vuetify.display.mdAndUp" fluid>
+    <v-row class="d-flex justify-center align-center">
+      <v-col
+        cols="4"
+        class="d-flex justify-center align-center text-h6 montserrat"
+        ><StarsAnimation></StarsAnimation
+      ></v-col>
+      <v-col
+        cols="4"
+        class="d-flex justify-center text-h2 montserrat mt-n16"
+        >Дизайн Человека</v-col
       >
-      <v-list-item-title>{{ post.title }}</v-list-item-title>
-      <v-btn class="ml-6" color="primary" @click="editPost(post._id)">Edit</v-btn>
-      <v-btn class="ml-6" color="primary" @click="removePost(post._id)">Delete</v-btn>
-    </v-list-item>
-    </v-list>
+      <v-col
+        cols="4"
+        class="d-flex justify-center align-center text-h6 montserrat"
+        ><StarsAnimation></StarsAnimation
+      ></v-col>
+      <v-col
+        cols="12"
+        class="d-flex justify-center align-center text-h5 montserrat mt-n16"
+        >Узнай себя лучше прямо сейчас</v-col
+      >
+      <v-col
+        cols="12"
+        class="d-flex justify-center align-center text-h6 montserrat"
+        ><v-btn color="deep-orange-lighten-1" size="x-large" class="text-body-2"
+          ><v-text class="">Рассчитать свою рейв-карту</v-text></v-btn
+        ></v-col
+      >
+    </v-row>
+    <v-row class="d-flex justify-center align-center"></v-row>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import {
-  fetchPosts,
-  fetchPost,
-  createPost,
-  updatePost,
-  deletePost,
-} from "@/services/api";
+import StarsAnimation from "../components/features/StarsAnimation.vue";
 
-const posts = ref([]);
-const onePost = ref([]);
 
-const loadPosts = async () => {
-  posts.value = await fetchPosts();
-};
-
-const loadPost = async (id) => {
-  onePost.value = await fetchPost(id);
-};
-
-const createNewPost = async () => {
-  await createPost({ title: "New Post", content: "content" });
-  loadPosts();
-};
-
-const editPost = async (id) => {
-  await updatePost(id, { title: "Updated Post", content: "edited content"});
-  loadPosts();
-};
-
-const removePost = async (id) => {
-  await deletePost(id);
-  loadPosts();
-};
-
-onMounted(loadPosts);
 </script>
 
 <style scoped>

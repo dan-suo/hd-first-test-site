@@ -118,13 +118,13 @@
 
         <v-menu transition="slide-y-transition">
           <template v-slot:activator="{ props }">
-            <v-card v-bind="props" variant="tonal">
+            <v-card v-bind="props" variant="tonal" color="deep-purple-lighten-2">
               <v-card-item>
                 <template v-slot:prepend>
                   <v-icon>mdi-human-male</v-icon>
                 </template>
                 <v-card-item-title class="ml-1">
-                  Пользователь
+                  User
                 </v-card-item-title>
                 <template v-slot:append>
                   <v-icon>mdi-arrow-down-thin</v-icon>

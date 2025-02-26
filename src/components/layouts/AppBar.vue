@@ -57,21 +57,20 @@
     <!-- We have a second non compact app-bar for middle and up screens
      we use it for main actions with our app -->
 
-    <v-app-bar elevation="0" color="" v-if="$vuetify.display.mdAndUp">
+    <v-app-bar elevation="4" color="indigo-lighten-5" v-if="$vuetify.display.mdAndUp">
 
       <!-- Now we create a second app-bar for middle and up screens-->
 
       <v-container
         class="d-flex justify-center align-center text-black"
-      >
-        <v-icon size="large" class="mr-6">mdi-creation-outline</v-icon>
-        <v-text class="text-caption mr-6"
+      ><v-btn to="/" icon="mdi-home" variant="text" class="mr-4"></v-btn>
+        <v-sheet class="text-caption mr-6" color="indigo-lighten-5"
           >Путеводитель по
-          <p>Дизайну Человека</p></v-text
+          <p>Дизайну Человека</p></v-sheet
         >
 
         <a class="cursor-pointer">
-          <v-card variant="plain" class="mr-6">
+          <v-card variant="plain" class="mr-6" to="/rave-chart-calculation">
             <v-card-item>
               <template v-slot:prepend>
                 <v-btn icon="mdi-plus-circle-outline" variant="text"></v-btn>
@@ -124,7 +123,7 @@
                   <v-icon>mdi-human-male</v-icon>
                 </template>
                 <v-card-item-title class="ml-1">
-                  User
+                  Войти
                 </v-card-item-title>
                 <template v-slot:append>
                   <v-icon>mdi-arrow-down-thin</v-icon>

@@ -16,6 +16,7 @@
               color="deep-orange-lighten-1"
               size="x-large"
               class="text-body-2"
+              to="/rave-chart-calculation"
               ><div class="">Рассчитать свою рейв-карту</div></v-btn
             ></v-col
           ></v-row

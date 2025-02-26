@@ -1,5 +1,5 @@
 <template>
-  <v-footer class="gradient-footer" >
+  <v-footer class="gradient-footer footer-height">
 
     <!-- Firstly crete a container for mobile version
      of footer, it will be complitely different
@@ -8,7 +8,7 @@
     <v-container
       fluid
       v-if="$vuetify.display.smAndDown"
-      class="d-flex justify-space-evenly align-center text-blue-grey-lighten-5 footer-height mt-n1"
+      class="d-flex justify-space-evenly align-center text-blue-grey-lighten-5  mt-n1"
     >
       <div class="d-flex justify-center align-center flex-column">
         <v-btn icon="mdi-cog-outline" variant="text" size="small"></v-btn>
@@ -48,6 +48,6 @@
 }
 
 .footer-height {
-    max-height: 50px;
+    max-height: 70px;
 }
 </style>

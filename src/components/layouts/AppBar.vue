@@ -94,7 +94,7 @@
         </a>
 
         <a class="cursor-pointer">
-          <v-card variant="plain" class="mr-6">
+          <v-card variant="plain" class="mr-6" to="/transits-main-page">
             <v-card-item>
               <template v-slot:prepend>
                 <v-btn icon="mdi-cog-outline" variant="text"></v-btn>

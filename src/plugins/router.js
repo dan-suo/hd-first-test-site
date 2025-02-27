@@ -18,6 +18,12 @@ const routes = [
     name: "MarketMainPage",
     component: () => import("@/views/MarketMainPage.vue"),
     meta: { title: "Купить" }
+  },
+  {
+    path: "/transits-main-page",
+    name: "TransitsMainPage",
+    component: () => import("@/views/TransitsMainPage.vue"),
+    meta: { title: "Транзиты" }
   }
 ];
 

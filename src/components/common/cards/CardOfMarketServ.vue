@@ -1,5 +1,5 @@
 <template>
-  <v-card class="pa-2">
+  <v-card class="pa-2" elevation="3">
     <v-card-item>
       <v-img height="150" :src="image" cover></v-img>
       <v-card-title class="text-body-2 text-uppercase montserrat mt-2">{{

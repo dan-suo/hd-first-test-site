@@ -62,7 +62,11 @@
         ><CardWhatIsHumDes></CardWhatIsHumDes
       ></v-col>
       <v-col class="d-flex justify-center align-center montserrat" cols="4">
-        <v-img rounded="sm" src="@/assets/brain-space-img.jpg" max-height="500"></v-img>
+        <v-img
+          rounded="sm"
+          src="@/assets/brain-space-img.jpg"
+          max-height="500"
+        ></v-img>
       </v-col>
     </v-row>
   </v-container>

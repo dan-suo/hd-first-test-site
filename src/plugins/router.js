@@ -13,6 +13,12 @@ const routes = [
     component: () => import("@/views/RaveChartCalculationMainPage.vue"),
     meta: { title: "Рассчёт рейв-карты" }
   },
+  {
+    path: "/market-main-page",
+    name: "MarketMainPage",
+    component: () => import("@/views/MarketMainPage.vue"),
+    meta: { title: "Купить" }
+  }
 ];
 
 const router = createRouter({

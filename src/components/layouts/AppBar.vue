@@ -83,7 +83,7 @@
         </a>
 
         <a class="cursor-pointer">
-          <v-card variant="plain" class="mr-6">
+          <v-card variant="plain" class="mr-6" to="/market-main-page">
             <v-card-item>
               <template v-slot:prepend>
                 <v-btn icon="mdi-cart-outline" variant="text"></v-btn>

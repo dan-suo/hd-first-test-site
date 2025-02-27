@@ -1,5 +1,6 @@
 <template>
   <v-container fluid class=" container-of-content">
+    <Breadcrumbs class="text-caption text-grey-darken-1" />
     <v-sheet class="text-caption text-grey-darken-1"
       >Тут пока нет никаких транзитов, конечно же, не так же сразу. Поэтому тут
       мы потренируемся забирать инфу с сервера, который сами написали. Через
@@ -27,6 +28,7 @@
 </template>
 
 <script setup>
+import Breadcrumbs from "@/components/common/Breadcrumbs.vue";
 import { ref, onMounted } from "vue";
 import {
   fetchPosts,

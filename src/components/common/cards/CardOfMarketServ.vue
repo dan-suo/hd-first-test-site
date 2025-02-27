@@ -1,18 +1,18 @@
 <template>
-  <v-card class="">
+  <v-card class="pa-2">
     <v-card-item>
-      <v-img color="primary" height="150" :src="image"></v-img>
-      <v-card-title class="text-h5 text-uppercase montserrat">{{
+      <v-img height="150" :src="image" cover></v-img>
+      <v-card-title class="text-body-2 text-uppercase montserrat mt-2">{{
         title
       }}</v-card-title>
       <v-card-subtitle>{{ price }}</v-card-subtitle>
       <v-card-actions>
         <v-btn color="deep-orange-lighten-1" text="Больше"></v-btn>
-        <v-spacer></v-spacer>
         <v-btn
-          :icon="show ? 'mdi-chevron-down' : 'mdi-chevron-up'"
+          :icon="showText ? 'mdi-chevron-up' : 'mdi-chevron-down'"
           @click="showText = !showText"
         ></v-btn>
+        <v-spacer></v-spacer>
         <v-btn
           icon="mdi-cart-outline"
           color="deep-orange-lighten-1"
@@ -20,7 +20,7 @@
         ></v-btn>
       </v-card-actions>
       <v-expand-transition>
-        <div v-show="show">
+        <div v-show="showText">
           <v-divider></v-divider>
           <v-card-text>{{ description }}</v-card-text>
         </div>
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from "vue";
+import { ref, defineProps } from "vue";
 
 const showText = ref(false);
 

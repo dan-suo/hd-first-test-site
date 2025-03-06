@@ -24,6 +24,12 @@ const routes = [
     name: "TransitsMainPage",
     component: () => import("@/views/TransitsMainPage.vue"),
     meta: { title: "Транзиты" }
+  },
+  {
+    path: "/base-of-knowledge",
+    name: "BaseOfKnowledge",
+    component: () => import("@/views/BaseOfKnowledge.vue"),
+    meta: { title: "База знаний" }
   }
 ];
 

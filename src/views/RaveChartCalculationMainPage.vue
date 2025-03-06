@@ -10,7 +10,7 @@
     >
     <CalculationDataForm></CalculationDataForm>
     <v-container >
-      
+
     </v-container>
   </v-container>
 </template>

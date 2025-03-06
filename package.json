@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@mdi/font": "7.4.47",
-    "astronomia": "^4.1.1",
+    "astronomy-engine": "^2.1.19",
     "axios": "^1.7.9",
     "pinia": "^3.0.1",
     "roboto-fontface": "*",

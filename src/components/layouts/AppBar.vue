@@ -105,7 +105,7 @@
         </a>
 
         <a class="cursor-pointer">
-          <v-card variant="plain" class="mr-6">
+          <v-card variant="plain" class="mr-6" to="/base-of-knowledge">
             <v-card-item>
               <template v-slot:prepend>
                 <v-btn icon="mdi-library-outline" variant="text"></v-btn>
@@ -122,9 +122,9 @@
                 <template v-slot:prepend>
                   <v-icon>mdi-human-male</v-icon>
                 </template>
-                <v-card-item-title class="ml-1">
+                <v-card-title class="ml-1">
                   Войти
-                </v-card-item-title>
+                </v-card-title>
                 <template v-slot:append>
                   <v-icon>mdi-arrow-down-thin</v-icon>
                 </template>

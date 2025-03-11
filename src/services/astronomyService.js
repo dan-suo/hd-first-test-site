@@ -5,10 +5,8 @@ import {
   Observer,
 } from "astronomy-engine";
 
-// 📌 Географическая точка для расчётов (Киев - пример)
 const observer = new Observer(0, 0, 0);
 
-// 📌 Планеты, которые мы учитываем
 const celestialBodies = [
   "Sun",
   "Moon",
@@ -31,7 +29,9 @@ const gateOrder = [
 ];
 
 // 📌 Смещение для совмещения астрологических градусов с мандалой ДЧ
-const DEGREE_SHIFT = 58.56;
+const DEGREE_SHIFT = 58.58;
+
+const NODES_SHIFT = 25;
 
 /**
  * 🔥 Функция для перевода градуса в ворота и линию
@@ -74,6 +74,55 @@ export function getPlanetaryPositions(date) {
     }
   });
 
+  const merkyrionPositionCorrection = positions.find(
+    (p) => p.planet === "Mercury"
+  );
+  if (
+    merkyrionPositionCorrection &&
+    merkyrionPositionCorrection.degree !== null
+  ) {
+    positions[2].degree = positions[2].degree - 0.5;
+  }
+
+  const venusPositionCorrection = positions.find((p) => p.planet === "Venus");
+  if (venusPositionCorrection && venusPositionCorrection.degree !== null) {
+    positions[3].degree = positions[3].degree + 1;
+  }
+
+  //const marsPositionCorrection = positions.find((p) => p.planet === "Mars");
+  //if (marsPositionCorrection && marsPositionCorrection.degree !== null) {
+  //positions[4].degree = positions[4].degree - 0.5;
+  //};
+
+  const jupiterPositionCorrection = positions.find(
+    (p) => p.planet === "Jupiter"
+  );
+  if (jupiterPositionCorrection && jupiterPositionCorrection.degree !== null) {
+    positions[5].degree = positions[5].degree + 0.5;
+  }
+
+  const saturnPositionCorrection = positions.find((p) => p.planet === "Saturn");
+  if (saturnPositionCorrection && saturnPositionCorrection.degree !== null) {
+    positions[6].degree = positions[6].degree + 1;
+  }
+
+  const uranusPositionCorrection = positions.find((p) => p.planet === "Uranus");
+  if (uranusPositionCorrection && uranusPositionCorrection.degree !== null) {
+    positions[7].degree = positions[7].degree - 3;
+  }
+
+  const neptunePositionCorrection = positions.find(
+    (p) => p.planet === "Neptune"
+  );
+  if (neptunePositionCorrection && neptunePositionCorrection.degree !== null) {
+    positions[8].degree = positions[8].degree - 3;
+  }
+
+  /*const plutoPositionCorrection = positions.find((p) => p.planet === "Pluto");
+  if (plutoPositionCorrection && plutoPositionCorrection.degree !== null) {
+    positions[9].degree = positions[9].degree - 0.5;
+  };*/
+
   // ☀️ Земля = Солнце + 180°
   const sunData = positions.find((p) => p.planet === "Sun");
   if (sunData && sunData.degree !== null) {
@@ -87,7 +136,8 @@ export function getPlanetaryPositions(date) {
   try {
     const moonNodeEvent = SearchMoonNode(date);
     if (moonNodeEvent) {
-      const rahuLongitude = EclipticLongitude("Moon", moonNodeEvent.time);
+      const rahuLongitude =
+        EclipticLongitude("Moon", moonNodeEvent.time) + NODES_SHIFT;
       const ketuLongitude = (rahuLongitude + 180) % 360;
 
       positions.push({ planet: "Rahu", degree: rahuLongitude });
@@ -118,4 +168,16 @@ export function getHumanDesignData(date) {
     const { gate, line } = getGateByDegree(degree);
     return { planet, degree: degree?.toFixed(2) || "N/A", gate, line };
   });
+}
+
+export function getRedHumanDesignData(date) {
+  const redDate = new Date(date);
+  redDate.setDate(redDate.getDate() - 88); // Сдвиг на 88 дней назад
+
+  console.log(
+    "🔥 Запущен getRedHumanDesignData (красные значения), дата:",
+    redDate
+  );
+
+  return getHumanDesignData(redDate);
 }

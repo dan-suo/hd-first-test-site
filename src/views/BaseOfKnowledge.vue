@@ -5,3 +5,4 @@
 <script setup>
 import AstroCalculationCheck from "@/components/features/AstroCalculationCheck.vue";
 </script>
+

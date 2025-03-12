@@ -29,9 +29,9 @@ const gateOrder = [
 ];
 
 // 📌 Смещение для совмещения астрологических градусов с мандалой ДЧ
-const DEGREE_SHIFT = 58.58;
+const DEGREE_SHIFT = 56;
 
-const NODES_SHIFT = 25;
+const NODES_SHIFT = 26;
 
 /**
  * 🔥 Функция для перевода градуса в ворота и линию
@@ -51,7 +51,7 @@ function getGateByDegree(degree) {
 }
 
 /**
- * 🔥 Функция для получения градусов всех тел (включая Узлы)
+ * Функция для получения градусов всех тел (включая Узлы)
  */
 export function getPlanetaryPositions(date) {
   if (!(date instanceof Date) || isNaN(date)) {
@@ -73,6 +73,11 @@ export function getPlanetaryPositions(date) {
       return { planet: body, degree: null };
     }
   });
+
+  const moonPositionCorrection = positions.find((p) => p.planet === "Moon");
+  if (moonPositionCorrection && moonPositionCorrection.degree !== null) {
+    positions[1].degree = positions[1].degree + 4;
+  }
 
   const merkyrionPositionCorrection = positions.find(
     (p) => p.planet === "Mercury"
@@ -132,7 +137,7 @@ export function getPlanetaryPositions(date) {
     });
   }
 
-  // 🌑 Лунные Узлы (Раху и Кету)
+  // Лунные Узлы (Раху и Кету)
   try {
     const moonNodeEvent = SearchMoonNode(date);
     if (moonNodeEvent) {
@@ -153,7 +158,7 @@ export function getPlanetaryPositions(date) {
 }
 
 /**
- * 🔥 Функция для получения данных в формате ДЧ (градус → ворота + линия)
+ * Функция для получения данных в формате ДЧ (градус → ворота + линия)
  */
 export function getHumanDesignData(date) {
   console.log("🚀 Запущен getHumanDesignData, дата:", date);
@@ -172,7 +177,7 @@ export function getHumanDesignData(date) {
 
 export function getRedHumanDesignData(date) {
   const redDate = new Date(date);
-  redDate.setDate(redDate.getDate() - 88); // Сдвиг на 88 дней назад
+  redDate.setDate(redDate.getDate() - 87); // Сдвиг на 88 дней назад
 
   console.log(
     "🔥 Запущен getRedHumanDesignData (красные значения), дата:",

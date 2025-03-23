@@ -86,7 +86,7 @@ export function getPlanetaryPositions(date) {
     merkyrionPositionCorrection &&
     merkyrionPositionCorrection.degree !== null
   ) {
-    positions[2].degree = positions[2].degree - 0.5;
+    positions[2].degree = positions[2].degree - 1;
   }
 
   const venusPositionCorrection = positions.find((p) => p.planet === "Venus");
@@ -177,8 +177,9 @@ export function getHumanDesignData(date) {
 
 export function getRedHumanDesignData(date) {
   const redDate = new Date(date);
-  redDate.setDate(redDate.getDate() - 87); // Сдвиг на 88 дней назад
-
+  redDate.setDate(redDate.getDate() - 82); // Отнимаем 87 дней
+  redDate.setHours(redDate.getHours() - 14); // Отнимаем 14 часов
+  redDate.setMinutes(redDate.getMinutes() - 27); // Отнимаем 27 минут
   console.log(
     "🔥 Запущен getRedHumanDesignData (красные значения), дата:",
     redDate

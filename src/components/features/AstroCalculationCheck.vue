@@ -8,6 +8,7 @@
           нажмите рассчитать
         </v-card-title>
         <v-text-field
+          variant="solo-filled"
           v-model="inputDate"
           label="Введите дату рождения в UTC"
           type="datetime-local"
@@ -1938,21 +1939,23 @@
         ></PlanetsColumnForRaveCard>
       </v-col>
     </v-row>
+    <v-row v-if="personalityType" class="mt-n16">
+      <v-col class="d-flex justify-center">{{ personalityType }}</v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick } from "vue";
-import {
-  getHumanDesignData,
-  getRedHumanDesignData,
-} from "@/services/astronomyService";
+import { ref, onMounted, watch, nextTick, watchEffect } from "vue";
+import { getGateByDegree } from "@/services/nasaLibApiService";
+import axios from "axios";
 import PlanetsColumnForRaveCard from "../common/PlanetsColumnForRaveCard.vue";
 
 const inputDate = ref(""); // Поле ввода даты
 const blackData = ref([]);
 const redData = ref([]);
 const tablesVisibility = ref(false);
+const personalityType = ref("");
 
 const centerColors = {
   "center-head": "#FFFACD",
@@ -2015,6 +2018,9 @@ const centerChannels = {
     { gate1: 27, gate2: 50 },
     { gate1: 42, gate2: 53 },
     { gate1: 9, gate2: 52 },
+    { gate1: 34, gate2: 20 },
+    { gate1: 34, gate2: 10 },
+    { gate1: 34, gate2: 57 },
   ],
   "center-g": [
     { gate1: 7, gate2: 31 },
@@ -2093,35 +2099,195 @@ const calculateDesign = async () => {
     return;
   }
 
-  const birthDate = new Date(inputDate.value);
-  if (isNaN(birthDate)) {
+  const parsedDate = new Date(inputDate.value);
+  if (isNaN(parsedDate)) {
     console.error("❌ Ошибка: введена некорректная дата!");
     return;
   }
 
-  console.log("🚀 Запрашиваем данные...");
-  const black = getHumanDesignData(birthDate);
-  const red = getRedHumanDesignData(birthDate);
+  // 📌 Форматируем дату для сервера (чёрный расчёт)
+  const blackRequestData = {
+    date: {
+      year: parsedDate.getUTCFullYear(),
+      month: parsedDate.getUTCMonth() + 1, // Месяцы в JS начинаются с 0
+      day: parsedDate.getUTCDate(),
+      hours: parsedDate.getUTCHours(),
+      minutes: parsedDate.getUTCMinutes(),
+    },
+  };
 
-  console.log("✅ Чёрные данные:", black);
-  console.log("✅ Красные данные:", red);
+  // Формируем дату для красного расчёта - около 86-88 дней
+  const redDate = new Date(parsedDate);
+  redDate.setDate(redDate.getDate() - 87);
+  redDate.setHours(redDate.getHours() - 14);
+  redDate.setMinutes(redDate.getMinutes() - 27);
 
-  blackData.value = [...black]; // Формируем массив принудительно
-  redData.value = [...red]; // Во избежание ошибок с рендером
+  const redRequestData = {
+    date: {
+      year: redDate.getUTCFullYear(),
+      month: redDate.getUTCMonth() + 1,
+      day: redDate.getUTCDate(),
+      hours: redDate.getUTCHours(),
+      minutes: redDate.getUTCMinutes(),
+    },
+  };
 
-  /* Тут отсоритируем массив в соответствии с порядком выше*/
-  blackData.value.sort(
-    (a, b) => planetOrder.indexOf(a.planet) - planetOrder.indexOf(b.planet)
-  );
-  redData.value.sort(
-    (a, b) => planetOrder.indexOf(a.planet) - planetOrder.indexOf(b.planet)
-  );
+  try {
+    console.log("📡 Отправляем запрос на сервер для чёрных данных...");
+    const blackResponse = await axios.post(
+      "http://localhost:5000/api/astro",
+      blackRequestData
+    );
 
-  await nextTick();
+    if (!Array.isArray(blackResponse.data) || blackResponse.data.length === 0) {
+      console.error(
+        "❌ Пустой или некорректный ответ от сервера (чёрные данные)!"
+      );
+      return;
+    }
 
-  console.log("📌 После nextTick:", blackData.value, redData.value);
+    console.log("✅ Чёрные данные с сервера:", blackResponse.data);
 
-  updateSvgColors();
+    console.log("📡 Отправляем запрос на сервер для красных данных...");
+    const redResponse = await axios.post(
+      "http://localhost:5000/api/astro",
+      redRequestData
+    );
+
+    if (!Array.isArray(redResponse.data) || redResponse.data.length === 0) {
+      console.error(
+        "❌ Пустой или некорректный ответ от сервера (красные данные)!"
+      );
+      return;
+    }
+
+    console.log("✅ Красные данные с сервера:", redResponse.data);
+
+    // Получаем линию чёрного расчёта для Солнца
+    const blackSunData = blackResponse.data.find(
+      (item) => item.planet === "Sun"
+    );
+    if (!blackSunData || blackSunData.degree === null) {
+      console.error("❌ Ошибка: данные для Солнца (чёрный расчёт) не найдены!");
+      return;
+    }
+
+    const { line: blackLine } = getGateByDegree(
+      parseFloat(blackSunData.degree)
+    );
+
+    const redSunData = redResponse.data.find((item) => item.planet === "Sun");
+    if (!redSunData || redSunData.degree === null) {
+      console.error(
+        "❌ Ошибка: данные для Солнца (красный расчёт) не найдены!"
+      );
+      return;
+    }
+
+    const { line: initialRedLine } = getGateByDegree(
+      parseFloat(redSunData.degree),
+      true
+    );
+
+    // Корректируем красный расчёт с помощью пошагового поиска
+    const { redDate: correctedRedDate, redLine: correctedRedLine } =
+      await findNearestRedLine(parsedDate, blackLine, initialRedLine);
+
+    console.log("✅ Корректированная дата красного расчёта:", correctedRedDate);
+    console.log(
+      "✅ Корректированная линия красного расчёта:",
+      correctedRedLine
+    );
+
+    // Получаем корректированные красные данные
+    const correctedRedRequestData = {
+      date: {
+        year: correctedRedDate.getUTCFullYear(),
+        month: correctedRedDate.getUTCMonth() + 1,
+        day: correctedRedDate.getUTCDate(),
+        hours: correctedRedDate.getUTCHours(),
+        minutes: correctedRedDate.getUTCMinutes(),
+      },
+    };
+
+    const correctedRedResponse = await axios.post(
+      "http://localhost:5000/api/astro",
+      correctedRedRequestData
+    );
+
+    if (
+      !Array.isArray(correctedRedResponse.data) ||
+      correctedRedResponse.data.length === 0
+    ) {
+      console.error(
+        "❌ Пустой или некорректный ответ от сервера (корректированные красные данные)!"
+      );
+      return;
+    }
+
+    console.log(
+      "✅ Корректированные красные данные с сервера:",
+      correctedRedResponse.data
+    );
+
+    const blackDataArray = blackResponse.data.map((item) => {
+      if (!item || typeof item !== "object" || item.degree === null) {
+        console.warn("❌ Некорректные данные для планеты:", item);
+        return {
+          planet: item?.planet || "Unknown",
+          degree: "N/A",
+          gate: null,
+          line: null,
+        };
+      }
+
+      return {
+        planet: item.planet,
+        degree: parseFloat(item.degree).toFixed(2), // ✅ Округляем до 2 знаков
+        ...getGateByDegree(parseFloat(item.degree)), // ✅ Теперь передаём корректные данные
+      };
+    });
+
+    const redDataArray = correctedRedResponse.data.map((item) => {
+      if (!item || typeof item !== "object" || item.degree === null) {
+        console.warn("❌ Некорректные данные для планеты:", item);
+        return {
+          planet: item?.planet || "Unknown",
+          degree: "N/A",
+          gate: null,
+          line: null,
+        };
+      }
+
+      return {
+        planet: item.planet,
+        degree: parseFloat(item.degree).toFixed(2), // ✅ Округляем до 2 знаков
+        ...getGateByDegree(parseFloat(item.degree)), // ✅ Теперь передаём корректные данные
+      };
+    });
+
+    // Сохраняем данные в реактивные переменные
+    blackData.value = blackDataArray;
+    redData.value = redDataArray;
+
+    /* Тут отсортируем массив в соответствии с порядком планет */
+    blackData.value.sort(
+      (a, b) => planetOrder.indexOf(a.planet) - planetOrder.indexOf(b.planet)
+    );
+    redData.value.sort(
+      (a, b) => planetOrder.indexOf(a.planet) - planetOrder.indexOf(b.planet)
+    );
+
+    await nextTick();
+
+    console.log("📌 После nextTick:", blackData.value, redData.value);
+
+    updateGates();
+    updateChannels();
+    updateSvgColors();
+  } catch (error) {
+    console.error("❌ Ошибка запроса:", error);
+  }
 };
 
 const blackGates = ref([]); // Чёрный (сознательный)
@@ -2137,9 +2303,259 @@ const updateGates = () => {
   redGates.value = redData.value.map((entry) => String(entry.gate));
 };
 
-const updateSvgColors = () => {
-  updateGates();
+const definedChannels = ref([]);
 
+const updateChannels = () => {
+  definedChannels.value = []; // Сбрасываем перед пересчётом
+  Object.values(centerChannels).forEach((channels) => {
+    channels.forEach(({ gate1, gate2 }) => {
+      if (
+        (blackGates.value.includes(gate1.toString()) ||
+          redGates.value.includes(gate1.toString())) &&
+        (blackGates.value.includes(gate2.toString()) ||
+          redGates.value.includes(gate2.toString()))
+      ) {
+        definedChannels.value.push(`${gate1}-${gate2}`);
+      }
+    });
+  });
+};
+
+/* Большой блок с функцией для  динамической корректировки
+красного расчёта */
+/**
+ * 📌 Функция для поиска ближайшей допустимой линии в красном расчёте
+ * @param {Date} blackDate - Дата чёрного расчёта (дата рождения)
+ * @param {number} blackLine - Линия чёрного расчёта (от 1 до 6)
+ * @param {number} initialRedLine - Изначальная линия красного расчёта (от 1 до 6)
+ * @returns {Promise<{ redDate: Date, redLine: number }>} - Корректированная дата и линия
+ */
+async function findNearestRedLine(blackDate, blackLine, initialRedLine) {
+  // Список допустимых профилей
+  const validProfiles = [
+    [1, 3],
+    [1, 4],
+    [2, 4],
+    [2, 5],
+    [3, 5],
+    [3, 6],
+    [4, 6],
+    [4, 1],
+    [5, 1],
+    [5, 2],
+    [6, 2],
+    [6, 3],
+  ];
+
+  // Находим допустимые линии для красного расчёта
+  const validRedLines = validProfiles
+    .filter(([black, red]) => black === blackLine)
+    .map(([black, red]) => red);
+
+  if (validRedLines.length === 0) {
+    throw new Error("Недопустимая линия чёрного расчёта");
+  }
+
+  if (validRedLines.includes(initialRedLine)) {
+    console.log("✅ Изначальная линия уже допустимая:", initialRedLine);
+    return {
+      redDate: new Date(blackDate), // Возвращаем изначальную дату
+      redLine: initialRedLine, // Возвращаем изначальную линию
+    };
+  }
+
+  // Изначальный отступ (87 дней, 14 часов, 27 минут)
+  const initialOffset = {
+    days: 87,
+    hours: 14,
+    minutes: 27,
+  };
+
+  // Диапазон поиска (±2 дня)
+  const searchRange = {
+    min: -1, // -1 день
+    max: 2, // +2 дня
+  };
+
+  // Шаг поиска (1 час)
+  const searchStep = 1000 * 60 * 60; // 1 час в миллисекундах
+
+  // Функция для получения линии красного расчёта по дате
+  async function getRedLine(date) {
+    const redRequestData = {
+      date: {
+        year: date.getUTCFullYear(),
+        month: date.getUTCMonth() + 1,
+        day: date.getUTCDate(),
+        hours: date.getUTCHours(),
+        minutes: date.getUTCMinutes(),
+      },
+    };
+
+    const response = await axios.post(
+      "http://localhost:5000/api/astro",
+      redRequestData
+    );
+    const sunData = response.data.find((item) => item.planet === "Sun");
+    if (!sunData || sunData.degree === null) {
+      throw new Error("Ошибка при получении данных для Солнца");
+    }
+
+    const { line } = getGateByDegree(parseFloat(sunData.degree), true);
+    return line;
+  }
+
+  // Начальная дата для поиска (изначальная дата минус 87 дней, 14 часов, 27 минут)
+  let startDate = new Date(blackDate);
+  startDate.setDate(startDate.getDate() - initialOffset.days);
+  startDate.setHours(startDate.getHours() - initialOffset.hours);
+  startDate.setMinutes(startDate.getMinutes() - initialOffset.minutes);
+
+  // Лучшие результаты
+  let bestDate = null;
+  let bestLine = null;
+  let bestDiff = Infinity;
+
+  // Поиск вперёд и назад от начальной даты
+  for (let i = 0; i <= searchRange.max * 24; i++) {
+    const forwardDate = new Date(startDate.getTime() + i * searchStep);
+    const backwardDate = new Date(startDate.getTime() - i * searchStep);
+
+    // Проверяем дату вперёд
+    try {
+      const forwardLine = await getRedLine(forwardDate);
+      if (validRedLines.includes(forwardLine)) {
+        const diff = Math.abs(forwardLine - initialRedLine);
+        if (diff < bestDiff) {
+          bestDiff = diff;
+          bestDate = forwardDate;
+          bestLine = forwardLine;
+        }
+      }
+    } catch (error) {
+      console.error("Ошибка при проверке даты вперёд:", forwardDate, error);
+    }
+
+    // Проверяем дату назад (если i > 0, чтобы не дублировать startDate)
+    if (i > 0) {
+      try {
+        const backwardLine = await getRedLine(backwardDate);
+        if (validRedLines.includes(backwardLine)) {
+          const diff = Math.abs(backwardLine - initialRedLine);
+          if (diff < bestDiff) {
+            bestDiff = diff;
+            bestDate = backwardDate;
+            bestLine = backwardLine;
+          }
+        }
+      } catch (error) {
+        console.error("Ошибка при проверке даты назад:", backwardDate, error);
+      }
+    }
+
+    // Если нашли подходящую линию, прерываем поиск
+    if (bestDate !== null) {
+      break;
+    }
+  }
+
+  if (!bestDate) {
+    throw new Error("Не удалось найти допустимую линию");
+  }
+
+  return { redDate: bestDate, redLine: bestLine };
+}
+
+const getPersonalityType = (definedChannels) => {
+  /* Тут я перечислю те каналы, определние которых делает
+    человека типом Генератор */
+  const sacralChannels = [
+    "3-60",
+    "9-52",
+    "53-42",
+    "27-50",
+    "59-6",
+    "5-15",
+    "14-2",
+    "29-46",
+    "34-10",
+    "34-57",
+    "34-20",
+  ];
+  /* Тут я назову переменную прямыми каналами МГ, но на деле
+    они являются таковыми только в связке с определённым сакральным
+    каналом, либо если это прямо 34-20 */
+  const mgDirectChannels = ["34-20", "22-12", "36-35", "21-45"];
+  /* Тут я постараюсь учесть все комбинированные варианты каналов,
+    которые делают человека типом МГ с учётом определённого сакрала */
+  const complexMgChannels = [
+    ["58-18", "48-16"],
+    ["58-18", "57-20"],
+    ["38-28", "48-16"],
+    ["38-28", "57-20"],
+    ["54-32", "48-16"],
+    ["54-32", "57-20"],
+    ["51-25", "7-31"],
+    ["51-25", "1-8"],
+    ["51-25", "13-33"],
+  ];
+  /* А тут комплексные варианты с сакральными каналами */
+  const mgSacralCombos = [
+    ["34-10", "7-31"],
+    ["34-10", "1-8"],
+    ["34-10", "13-33"],
+    ["5-15", "7-31"],
+    ["5-15", "1-8"],
+    ["5-15", "13-33"],
+    ["14-2", "7-31"],
+    ["14-2", "1-8"],
+    ["14-2", "13-33"],
+    ["29-46", "7-31"],
+    ["29-46", "1-8"],
+    ["29-46", "13-33"],
+  ];
+  /* Каналы для определения прямой манифестации */
+  const manifestorChannels = ["21-45", "22-12", "36-35"];
+  /* Проверяем есть ли в расчёте определённый сакральный
+    канал из списка */
+  const hasSacralChannels = definedChannels.some((channel) =>
+    sacralChannels.includes(channel)
+  );
+  /* Делаем первую условную проверку на то, какой тип вернёт функция
+    Генератор или МГ */
+  if (hasSacralChannels) {
+    const isMG =
+      definedChannels.some((channel) => mgDirectChannels.includes(channel)) ||
+      mgSacralCombos.some((combo) =>
+        combo.every((channel) => definedChannels.includes(channel))
+      ) ||
+      complexMgChannels.some((combo) =>
+        combo.every((channel) => definedChannels.includes(channel))
+      );
+
+    return isMG ? "Манифестирующий Генератор" : "Генератор";
+  }
+  /* Делаем проверку на оставшиеся типы личности */
+  if (
+    definedChannels.some((channel) => manifestorChannels.includes(channel)) ||
+    complexMgChannels.some((combo) =>
+      combo.every((channel) => definedChannels.includes(channel))
+    )
+  ) {
+    return "Манифестор";
+  }
+  return definedChannels.length > 0 ? "Проектор" : "Рефлектор";
+};
+
+watchEffect(() => {
+  if (definedChannels.value.length > 0) {
+    console.log("Определяем тип личности...");
+    personalityType.value = getPersonalityType(definedChannels.value);
+    console.log("Личность:", personalityType.value);
+  }
+});
+
+const updateSvgColors = () => {
   if (!blackGates.value.length && !redGates.value.length) {
     console.warn("❌ Ошибка: данные для окраски SVG не получены!");
     return;
@@ -2189,7 +2605,7 @@ const updateSvgColors = () => {
   updateCenterColors();
 };
 
-/* Дальше работаем с каналами и цетрами */
+/* Дальше работаем с каналами и центрами */
 
 // Определяем, какие каналы полностью закрашены
 const getDefinedCenters = () => {

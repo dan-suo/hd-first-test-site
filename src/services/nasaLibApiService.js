@@ -79,12 +79,11 @@ const gateOrder = [
 ];
 
 const DEGREE_SHIFT = 58.2;
-const RED_DEGREE_SHIFT = 10;
 
-export function getGateByDegree(degree, isRed = false) {
+export function getGateByDegree(degree) {
   if (degree == null || isNaN(degree)) return { gate: null, line: null };
 
-  let adjustedDegree = ((degree + DEGREE_SHIFT) + (isRed ? RED_DEGREE_SHIFT : 0)) % 360;
+  let adjustedDegree = (degree + DEGREE_SHIFT) % 360;
   let gateIndex = Math.floor(adjustedDegree / 5.625);
   let lineIndex = Math.floor((adjustedDegree % 5.625) / 0.9375) + 1;
 

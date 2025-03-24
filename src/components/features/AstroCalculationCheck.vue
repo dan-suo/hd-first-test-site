@@ -2352,14 +2352,25 @@ async function findNearestRedLine(blackDate, blackLine, initialRedLine) {
     .filter(([black, red]) => black === blackLine)
     .map(([black, red]) => red);
 
+  console.log("🟢 Чёрная линия:", blackLine);
+  console.log("🟢 Изначальная красная линия:", initialRedLine);
+  console.log("🟢 Допустимые красные линии:", validRedLines);
+  console.log("🟢 Массив профилей:", validProfiles);
+  console.log("🟢 Типы данных:", typeof blackLine, typeof initialRedLine);
+
   if (validRedLines.length === 0) {
     throw new Error("Недопустимая линия чёрного расчёта");
   }
 
   if (validRedLines.includes(initialRedLine)) {
     console.log("✅ Изначальная линия уже допустимая:", initialRedLine);
+    // Рассчитываем красную дату за 88 дней до чёрной даты
+    const redDate = new Date(blackDate);
+    redDate.setDate(redDate.getDate() - 87);
+    redDate.setHours(redDate.getHours() - 14);
+    redDate.setMinutes(redDate.getMinutes() - 27);
     return {
-      redDate: new Date(blackDate), // Возвращаем изначальную дату
+      redDate: redDate, // Возвращаем изначальную дату
       redLine: initialRedLine, // Возвращаем изначальную линию
     };
   }
@@ -2374,7 +2385,7 @@ async function findNearestRedLine(blackDate, blackLine, initialRedLine) {
   // Диапазон поиска (±2 дня)
   const searchRange = {
     min: -1, // -1 день
-    max: 2, // +2 дня
+    max: 3, // +2 дня
   };
 
   // Шаг поиска (1 час)

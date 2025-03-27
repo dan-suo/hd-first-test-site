@@ -4,8 +4,7 @@
     <v-row justify="center" class="mt-n10">
       <v-col cols="12" md="10">
         <v-card-title class="text-body-1"
-          >Чтобы узнать дизайн введите здесь дату и время рождения и нажмите
-          рассчитать
+          >Для расчёта введите дату и время рождения в поле ниже и нажмите "рассчитать"
         </v-card-title>
         <v-text-field
           variant="solo-filled"
@@ -174,7 +173,7 @@
           align="left"
         ></PlanetsColumnForRaveCard
       ></v-col>
-      <v-col cols="5">
+      <v-col cols="5" v-show="isRaveCardVisible">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 700 600"
@@ -2035,6 +2034,8 @@ const personalityType = ref("");
 const blackProfileLine = ref(null);
 const redProfileLine = ref(null);
 
+// Делаем переменную, отвечающую за видимость рейв-карты
+const isRaveCardVisible = ref(false);
 // Опишем название линий
 const lineDescriptions = {
   1: "Исследователь",
@@ -2189,6 +2190,9 @@ onMounted(() => {
 // Первичная функция, выполняющая расчёт рейв-карты
 // по введённой inputDate
 const calculateDesign = async () => {
+
+  isRaveCardVisible.value = true;
+
   if (!inputDate.value) {
     console.error("❌ Ошибка: дата не введена!");
     return;
@@ -2905,7 +2909,7 @@ watch([blackGates, redGates], updateSvgColors, { deep: true });
 }
 
 .container-of-content {
-  max-width: 1500px;
+  max-width: 1300px;
   margin: 0 auto;
   padding: 16px;
 }

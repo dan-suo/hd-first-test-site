@@ -1,11 +1,11 @@
 <template>
-  <v-container class="container-of-content">
+  <v-container class="container-of-content mt-7">
     <!-- Ввод даты -->
     <v-row justify="center" class="mt-n10">
-      <v-col cols="12" md="8">
+      <v-col cols="12" md="10">
         <v-card-title class="text-body-1"
-          >Чтобы узнать свой дизайн введите здесь вашу дату и время рождения и
-          нажмите рассчитать
+          >Чтобы узнать дизайн введите здесь дату и время рождения и нажмите
+          рассчитать
         </v-card-title>
         <v-text-field
           variant="solo-filled"
@@ -89,8 +89,84 @@
       </v-col>
     </v-row>
 
-    <v-row class="d-flex justify-center mt-n10">
-      <v-col cols="3" class=""
+    <v-row class="d-flex justify-end align-items-start mt-n3 montserrat">
+      <v-col
+        class="d-flex justify-start align-self-start"
+        cols="3"
+        v-if="personalityType"
+        ><v-row
+          ><v-col cols="12" class="d-flex justify-space-between align-center"
+            ><span>Ваш энергетический тип :</span>
+            <span class="font-weight-bold ml-auto">
+              &nbsp;{{ personalityType }}</span
+            ></v-col
+          ><v-col
+            v-if="blackProfileLine && redProfileLine"
+            class="d-flex justify-space-between align-self-start"
+            cols="12"
+            >Ваш профиль:
+            <span
+              ><span class="font-weight-bold"
+                >&nbsp; {{ blackProfileLine }}&nbsp; / </span
+              ><span class="font-weight-bold text-red"
+                >&nbsp;{{ redProfileLine }}</span
+              >&nbsp;
+              <span class="text-caption"
+                >({{ textProfileDescription }})</span
+              ></span
+            ></v-col
+          ><v-col cols="12"><v-divider></v-divider></v-col>
+          <v-col cols="12" class="d-flex justify-space-between align-self-start"
+            ><span>Ваша стратегия :</span
+            ><span class="font-weight-bold"
+              >&nbsp;{{ strategyDescription }}</span
+            ></v-col
+          ><v-col
+            cols="12"
+            class="d-flex justify-space-between align-self-start"
+            ><span>Состояние Ложного Я :</span
+            ><span class="font-weight-bold"
+              >&nbsp;{{ notMeDescription }}</span
+            ></v-col
+          ><v-col
+            v-if="authority"
+            cols="12"
+            class="d-flex justify-space-between align-self-start"
+          >
+            <span>Ваш авторитет :</span>
+            <span class="font-weight-bold">&nbsp;{{ authority }}</span>
+          </v-col>
+          <v-col cols="12"><v-divider></v-divider></v-col>
+          <v-col
+            cols="12"
+            class="d-flex justify-space-between align-self-start"
+          >
+            <span>Инкарнационный Крест:</span>
+            <span class="font-weight-bold">
+              {{ blackIncarnationCross.sunGate }}/{{
+                blackIncarnationCross.earthGate
+              }}
+              |
+              <span class="text-red"
+                >{{ redIncarnationCross.sunGate }}/{{
+                  redIncarnationCross.earthGate
+                }}</span
+              >
+            </span>
+          </v-col>
+          <v-col cols="12" class="d-flex justify-space-between align-self-start"
+            ><span>Дата натального расчёта :</span></v-col
+          >
+          <v-col cols="12" class="d-flex justify-space-between align-self-start"
+            ><span>Дата ПРЕнатального расчёта :</span></v-col
+          ><v-col
+            cols="12"
+            class="d-flex justify-space-between align-self-start"
+            ><span>Определённость :</span></v-col
+          >
+        </v-row></v-col
+      >
+      <v-col cols="2" class=""
         ><PlanetsColumnForRaveCard
           title="Дизайн"
           :data="redData"
@@ -98,7 +174,7 @@
           align="left"
         ></PlanetsColumnForRaveCard
       ></v-col>
-      <v-col cols="6">
+      <v-col cols="5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 700 600"
@@ -1930,7 +2006,7 @@
           ></path>
         </svg>
       </v-col>
-      <v-col cols="3">
+      <v-col cols="2">
         <PlanetsColumnForRaveCard
           title="Личность"
           :data="blackData"
@@ -1939,14 +2015,11 @@
         ></PlanetsColumnForRaveCard>
       </v-col>
     </v-row>
-    <v-row v-if="personalityType" class="mt-n16">
-      <v-col class="d-flex justify-center">{{ personalityType }}</v-col>
-    </v-row>
   </v-container>
 </template>
 
 <script setup>
-import { ref, onMounted, watch, nextTick, watchEffect } from "vue";
+import { ref, onMounted, watch, nextTick, watchEffect, computed } from "vue";
 import { getGateByDegree } from "@/services/nasaLibApiService";
 import axios from "axios";
 import PlanetsColumnForRaveCard from "../common/PlanetsColumnForRaveCard.vue";
@@ -1957,6 +2030,23 @@ const redData = ref([]);
 const tablesVisibility = ref(false);
 const personalityType = ref("");
 
+// Создаём переменные, которые будут принимать значения линий
+// для профиля в расчёте
+const blackProfileLine = ref(null);
+const redProfileLine = ref(null);
+
+// Опишем название линий
+const lineDescriptions = {
+  1: "Исследователь",
+  2: "Отшельник",
+  3: "Мученик",
+  4: "Оппортунист",
+  5: "Еретик",
+  6: "Ролевая Модель",
+};
+
+// Скажем в какие цвета хоти красить
+// каждый определённый центр
 const centerColors = {
   "center-head": "#FFFACD",
   "center-adjna": "#6B8E23",
@@ -1969,6 +2059,7 @@ const centerColors = {
   "center-ego": "#FA8072",
 };
 
+// Опишем какие каналы к каким центрам принадлежат
 const centerChannels = {
   "center-head": [
     { gate1: 63, gate2: 4 },
@@ -2079,6 +2170,8 @@ const planetOrder = [
   "Pluto",
 ];
 
+// Если с прошлого захода остались данные, то просим
+// приложение закрасить СВГ в соответствии с ними
 onMounted(() => {
   if (blackData.length && redData.length) {
     updateSvgColors();
@@ -2093,6 +2186,8 @@ onMounted(() => {
   });
 });
 
+// Первичная функция, выполняющая расчёт рейв-карты
+// по введённой inputDate
 const calculateDesign = async () => {
   if (!inputDate.value) {
     console.error("❌ Ошибка: дата не введена!");
@@ -2105,7 +2200,7 @@ const calculateDesign = async () => {
     return;
   }
 
-  // 📌 Форматируем дату для сервера (чёрный расчёт)
+  // Форматируем дату для сервера (чёрный расчёт)
   const blackRequestData = {
     date: {
       year: parsedDate.getUTCFullYear(),
@@ -2281,6 +2376,18 @@ const calculateDesign = async () => {
     await nextTick();
 
     console.log("📌 После nextTick:", blackData.value, redData.value);
+
+    // Тут запишем значения линий профиля для template
+
+    watchEffect(() => {
+      const blackSun = blackData.value.find((item) => item.planet === "Sun");
+      const redSun = redData.value.find((item) => item.planet === "Sun");
+
+      if (blackSun && redSun) {
+        blackProfileLine.value = blackSun.line;
+        redProfileLine.value = redSun.line;
+      }
+    });
 
     updateGates();
     updateChannels();
@@ -2477,6 +2584,42 @@ async function findNearestRedLine(blackDate, blackLine, initialRedLine) {
   return { redDate: bestDate, redLine: bestLine };
 }
 
+// Тут же оставим вычисляемое свойство, которое вернёт пару слов - описаний
+// для линий профиля
+const textProfileDescription = computed(() => {
+  if (!blackProfileLine.value || !redProfileLine.value) return "";
+
+  const blackDescription = lineDescriptions[blackProfileLine.value] || "";
+  const redDescription = lineDescriptions[redProfileLine.value] || "";
+
+  return `${blackDescription} / ${redDescription}`;
+});
+
+// Здесь оставляем вычисляемое свойство для выведения
+// стратегии типа
+const strategyDescription = computed(() => {
+  const strategies = {
+    Генератор: "Ждать возможности для отклика",
+    "Манифестирующий Генератор": "Ждать возможности для отклика",
+    Манифестор: "Информировать перед действием",
+    Проектор: "Ждать приглашения",
+    Рефлектор: "Ждать лунный цикл",
+  };
+
+  return strategies[personalityType.value] || "Неизвестная стратегия";
+});
+
+const notMeDescription = computed(() => {
+  const notMe = {
+    Генератор: "Фрустрация",
+    "Манифестирующий Генератор": "Фрустрация",
+    Манифестор: "Злоба",
+    Проектор: "Горечь",
+    Рефлектор: "Разочарование",
+  };
+  return notMe[personalityType.value] || "Неизвестное Ложное Я";
+});
+
 const getPersonalityType = (definedChannels) => {
   /* Тут я перечислю те каналы, определние которых делает
     человека типом Генератор */
@@ -2650,6 +2793,109 @@ const updateCenterColors = () => {
   });
 };
 
+// Пишем функцию для определения "авторитета"
+const getAuthority = (definedChannels) => {
+  // Каналы эмоционального центра
+  const emotionalChannels = [
+    "55-39",
+    "30-41",
+    "22-12",
+    "36-35",
+    "37-40",
+    "6-59",
+    "49-19",
+  ];
+
+  // Каналы сакрального центра
+  const sacralChannels = [
+    "3-60",
+    "9-52",
+    "53-42",
+    "27-50",
+    "59-6",
+    "5-15",
+    "14-2",
+    "29-46",
+    "34-10",
+    "34-57",
+    "34-20",
+  ];
+
+  // Каналы селезёночного центра
+  const spleenChannels = [
+    "57-20",
+    "57-10",
+    "44-26",
+    "48-16",
+    "32-54",
+    "28-38",
+    "18-58",
+  ];
+
+  // Каналы эго-центра
+  const egoChannels = ["51-25", "21-45"];
+
+  // Каналы G-центра (для самопроецируемого авторитета)
+  const gCenterChannels = ["7-31", "1-8", "13-33", "10-20"];
+
+  // Каналы аджна центра (для ментального авторитета)
+  const ajnaChannels = ["17-62", "43-23", "11-56", "63-4", "61-24", "64-47"];
+
+  // Проверяем по приоритету
+  if (definedChannels.some((ch) => emotionalChannels.includes(ch))) {
+    return "Эмоциональный";
+  }
+
+  if (definedChannels.some((ch) => sacralChannels.includes(ch))) {
+    return "Сакральный";
+  }
+
+  if (definedChannels.some((ch) => spleenChannels.includes(ch))) {
+    return "Селезёночный";
+  }
+
+  if (definedChannels.some((ch) => egoChannels.includes(ch))) {
+    return "Эго";
+  }
+
+  if (definedChannels.some((ch) => gCenterChannels.includes(ch))) {
+    return "Самопроецируемый";
+  }
+
+  if (definedChannels.some((ch) => ajnaChannels.includes(ch))) {
+    return "Внешний (Ментальный)";
+  }
+
+  // Если ничего не найдено
+  return "Лунный";
+};
+
+// Делаем производное свойство для авторитета,
+// чтобы вывести его в template
+const authority = computed(() => {
+  if (!definedChannels.value.length) return null;
+  return getAuthority(definedChannels.value);
+});
+
+// Вычисляем пары ворот для Инкарнационного Креста
+const blackIncarnationCross = computed(() => {
+  const blackSun = blackData.value.find((item) => item.planet === "Sun");
+  const blackEarth = blackData.value.find((item) => item.planet === "Earth");
+  return {
+    sunGate: blackSun?.gate || "—",
+    earthGate: blackEarth?.gate || "—",
+  };
+});
+
+const redIncarnationCross = computed(() => {
+  const redSun = redData.value.find((item) => item.planet === "Sun");
+  const redEarth = redData.value.find((item) => item.planet === "Earth");
+  return {
+    sunGate: redSun?.gate || "—",
+    earthGate: redEarth?.gate || "—",
+  };
+});
+
 watch([blackGates, redGates], updateSvgColors, { deep: true });
 </script>
 
@@ -2659,7 +2905,7 @@ watch([blackGates, redGates], updateSvgColors, { deep: true });
 }
 
 .container-of-content {
-  max-width: 1300px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 16px;
 }

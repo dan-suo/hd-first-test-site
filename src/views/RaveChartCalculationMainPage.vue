@@ -3,21 +3,14 @@
     <Breadcrumbs class="text-caption text-grey-darken-1" />
     <v-sheet class="font-weight-bold text-h4 montserrat"
       >Расчёт рейв-карты</v-sheet
-    >
-    <v-sheet class="text-caption text-grey-darken-1 mt-1"
-      >В данный момент расчёт находится в разработке, так что нажав на кнопку вы
-      пока не увидите свою карту, но увидите котика.</v-sheet
-    >
-    <CalculationDataForm></CalculationDataForm>
-    <v-container >
-
-    </v-container>
+    ><AstroCalculationCheck></AstroCalculationCheck>
   </v-container>
 </template>
 
 <script setup>
 import Breadcrumbs from "../components/common/Breadcrumbs.vue";
 import CalculationDataForm from "../components/forms/CalculationsDataForm.vue";
+import AstroCalculationCheck from "@/components/features/AstroCalculationCheck.vue";
 </script>
 
 <style scoped>
@@ -25,7 +18,7 @@ import CalculationDataForm from "../components/forms/CalculationsDataForm.vue";
   font-family: "Montserrat", sans-serif;
 }
 .container-of-content {
-  max-width: 1300px;
+  max-width: 1500px;
   margin: 0 auto;
   padding: 16px;
 }

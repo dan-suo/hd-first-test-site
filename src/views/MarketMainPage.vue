@@ -29,14 +29,26 @@
         <v-col cols="12">
           <v-sheet>Корзина ({{ marketStore.cartCount }})</v-sheet>
           <v-list>
-            <v-list-item v-for="item in marketStore.cart" :key="item.id">
-              {{ item.title }} - {{ item.quantity }} шт. ({{
-                marketStore.itemTotalPrice(item)
-              }}
-              грн.)
+            <v-list-item v-for="item in marketStore.cart" :key="item.id"
+              ><v-row 
+                ><v-col cols="4">
+                  {{ item.title }} - {{ item.quantity }} шт. ({{
+                    marketStore.itemTotalPrice(item)
+                  }}
+                  грн.)</v-col
+                ><v-col cols="">
+                  <v-btn
+                    size="small"
+                    variant="text"
+                    @click="marketStore.removeFromCart(item)"
+                  ><v-icon>mdi-close</v-icon></v-btn>
+                </v-col>
+              </v-row>
             </v-list-item>
           </v-list>
-          <v-sheet>Итоговая сумма : {{ marketStore.cartTotalPrice }} грн.</v-sheet>
+          <v-sheet
+            >Итоговая сумма : {{ marketStore.cartTotalPrice }} грн.</v-sheet
+          >
         </v-col>
       </v-row>
     </v-container>

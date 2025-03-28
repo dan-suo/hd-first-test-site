@@ -45,11 +45,30 @@ export const useMarketStore = defineStore("market", () => {
     cart.value.reduce((sum, item) => sum + item.quantity, 0)
   );
 
+  const removeFromCart = (product) => {
+    const itemIndex = cart.value.findIndex((p) => p.id === product.id);
+    if (itemIndex !== -1) {
+      if (cart.value[itemIndex].quantity > 1) {
+        cart.value[itemIndex].quantity--;
+      } else {
+        cart.value.splice(itemIndex, 1);
+      }
+    }
+  };
+
   const itemTotalPrice = (item) => item.price * item.quantity;
 
   const cartTotalPrice = computed(() =>
     cart.value.reduce((sum, item) => sum + itemTotalPrice(item), 0)
   );
 
-  return { products, cart, addToCart, cartCount, cartTotalPrice, itemTotalPrice };
+  return {
+    products,
+    cart,
+    addToCart,
+    cartCount,
+    cartTotalPrice,
+    itemTotalPrice,
+    removeFromCart,
+  };
 });

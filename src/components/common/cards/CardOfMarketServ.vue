@@ -5,7 +5,7 @@
       <v-card-title class="text-body-2 text-uppercase montserrat mt-2">{{
         title
       }}</v-card-title>
-      <v-card-subtitle>{{ price }}</v-card-subtitle>
+      <v-card-subtitle>{{ price }} грн.</v-card-subtitle>
       <v-card-actions>
         <v-btn color="deep-orange-lighten-1" text="Больше"></v-btn>
         <v-btn

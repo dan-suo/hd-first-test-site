@@ -16,7 +16,7 @@
             :price="product.price"
             :description="product.description"
             :image="product.image"
-            @buy="marketStore.addToCart"
+            @buy="() => marketStore.addToCart(product)"
           />
         </v-col>
       </v-row>
@@ -28,18 +28,15 @@
       <v-row v-if="marketStore.cart.length">
         <v-col cols="12">
           <v-sheet>Корзина ({{ marketStore.cartCount }})</v-sheet>
-          <v-sheet class="text-caption text-grey-darken-1"
-            >* корзина пока багованная и вообще сделана для посмотреть, исправим
-            в следующей версии</v-sheet
-          >
           <v-list>
             <v-list-item v-for="item in marketStore.cart" :key="item.id">
               {{ item.title }} - {{ item.quantity }} шт. ({{
-                item.price * item.quantity
+                marketStore.itemTotalPrice(item)
               }}
               грн.)
             </v-list-item>
           </v-list>
+          <v-sheet>Итоговая сумма : {{ marketStore.cartTotalPrice }} грн.</v-sheet>
         </v-col>
       </v-row>
     </v-container>
@@ -47,8 +44,12 @@
 </template>
 
 <script setup>
+// Импоритруем "хлебные крошки для навигации"
 import Breadcrumbs from "../components/common/Breadcrumbs.vue";
+// Это компонент карточки товара, в который мы передаём пропсы
 import CardOfMarketServ from "../components/common/cards/CardOfMarketServ.vue";
+// Хранилище и логика подсчёта магазина
+// импоритруем store чтобы пользоваться ими в компоненте
 import { useMarketStore } from "../stores/marketStore";
 
 const marketStore = useMarketStore();

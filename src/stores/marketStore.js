@@ -17,7 +17,7 @@ export const useMarketStore = defineStore("market", () => {
         "Разбираем твой хологенетический профиль, анализируя все три последовательности, тени и дары каждой позиции. Текст + голос.",
       price: 3500,
       image: "gen-keys-market-img.jpg",
-      id: 2
+      id: 2,
     },
     {
       title: "Разбор Совместимости по ДЧ",
@@ -25,7 +25,7 @@ export const useMarketStore = defineStore("market", () => {
         "Разбираем композит, как устроена механика взаимодействия двух человек, какие отношения подходят, какие есть подводные камни т другое.",
       price: 3500,
       image: "hd-composite-market-img.jpg",
-      id: 3
+      id: 3,
     },
   ]);
 
@@ -35,16 +35,21 @@ export const useMarketStore = defineStore("market", () => {
     const item = cart.value.find((p) => p.id === product.id);
     if (item) {
       item.quantity++;
-      item.price += product.price;
     } else {
       cart.value.push({ ...product, quantity: 1 });
-      alert("Товар добавлен в корзину");
     }
+    alert("Товар добавлен в корзину");
   };
 
   const cartCount = computed(() =>
     cart.value.reduce((sum, item) => sum + item.quantity, 0)
   );
 
-  return { products, cart, addToCart, cartCount };
+  const itemTotalPrice = (item) => item.price * item.quantity;
+
+  const cartTotalPrice = computed(() =>
+    cart.value.reduce((sum, item) => sum + itemTotalPrice(item), 0)
+  );
+
+  return { products, cart, addToCart, cartCount, cartTotalPrice, itemTotalPrice };
 });

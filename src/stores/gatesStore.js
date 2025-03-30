@@ -27,7 +27,7 @@ export const useGatesStore = defineStore("gates", () => {
     { id: "31", title: "Лидерства" },
     { id: "33", title: "Уединения" },
     { id: "35", title: "Перемен" },
-    { id: "12", title: "Предпазливости" },
+    { id: "12", title: "Осторожности" },
     { id: "45", title: "Собственности" },
   ];
 
@@ -91,6 +91,18 @@ export const useGatesStore = defineStore("gates", () => {
     { id: "39", title: "Провокации" },
   ];
 
+  const centersNames = [
+    { title: "Теменной центр", gates: gatesHeadCenter },
+    { title: "Аджна центр", gates: gatesAjnaCenter },
+    { title: "Горловой центр", gates: gatesThroatCenter },
+    { title: "Джи центр", gates: gatesGCenter },
+    { title: "Эго центр", gates: gatesEgoCenter },
+    { title: "Центр Солнечного Сплетения", gates: gatesSolarPlexusCenter },
+    { title: "Сакральный центр", gates: gatesSacralCenter },
+    { title: "Селезёночнй центр", gates: gatesSplenicCenter },
+    { title: "Корневой центр", gates: gatesRootCenter }, 
+  ];
+
   return {
     gatesHeadCenter,
     gatesAjnaCenter,
@@ -101,5 +113,6 @@ export const useGatesStore = defineStore("gates", () => {
     gatesSacralCenter,
     gatesSplenicCenter,
     gatesRootCenter,
+    centersNames
   };
 });

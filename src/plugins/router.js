@@ -53,6 +53,12 @@ const routes = [
         meta: { title: "Типы" },
       },
       {
+        path: "types/:id",
+        name: "CurrentType",
+        component: () => import("@/views/BaseOfKnowledgePages/BaseOfKnowledgePagesTypes/CurrentType.vue"),
+        meta: { title: "Описание типа" }
+      },
+      {
         path: "centers",
         name: "Centers",
         component: () => import("@/views/BaseOfKnowledgePages/BaseCenters.vue"),
@@ -167,9 +173,20 @@ router.beforeEach((to, form, next) => {
     64: "Замешательства",
   };
 
+  const typeNames = {
+    manifestor: "Манифестор",
+    generator: "Генератор",
+    "manifesting-generator": "Манифестирующий Генератор",
+    projector: "Проектор",
+    reflector: "Рефлектор",
+  };
+
   if (to.name === "CurrentGates" && to.params.id) {
     const gateName = gatesNames[to.params.id] || `Ворота ${to.params.id}`;
     document.title = `Ворота ${to.params.id} - ${gateName}`;
+  } else if (to.name === "CurrentType" && to.params.id) {
+    const typeName = typeNames[to.params.id] || `Тип ${to.params.id}`;
+    document.title = `${typeName} | Дизайн Человека`;
   } else {
     document.title = to.meta.title || "Страница сайта";
   }

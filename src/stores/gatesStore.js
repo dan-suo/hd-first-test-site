@@ -100,11 +100,45 @@ export const useGatesStore = defineStore("gates", () => {
     { title: "Центр Солнечного Сплетения", gates: gatesSolarPlexusCenter },
     { title: "Сакральный центр", gates: gatesSacralCenter },
     { title: "Селезёночнй центр", gates: gatesSplenicCenter },
-    { title: "Корневой центр", gates: gatesRootCenter }, 
+    { title: "Корневой центр", gates: gatesRootCenter },
   ];
 
   const typesStorage = [
-    { title: "Манифестор", image: ""}
+    {
+      title: "Манифестор",
+      image: "/images/manifestor-img.png",
+      percentage: "9%",
+      description:
+        "От природы создан для инициативы, для того, чтобы запускать процессы и вовлекать в них других",
+    },
+    {
+      title: "Генератор",
+      image: "/images/generator-img.png",
+      percentage: "36%",
+      description:
+        "Созидатель, предназначенный творить, получая удовлетворение от процесса",
+    },
+    {
+      title: "Манифестирующий Генератор",
+      image: "/images/manif-generator-img.png",
+      percentage: "34%",
+      description:
+        "Созидатель, предназначенный скорее доводить активность до логического завершения",
+    },
+    {
+      title: "Проектор",
+      image: "/images/projector-img.png",
+      percentage: "20%",
+      description:
+        "От природы восприимчив, предназначен для распознания и направления других людей по корректному для их сути пути",
+    },
+    {
+      title: "Рефлектор",
+      image: "/images/reflector-img.png",
+      percentage: "1%",
+      description:
+        "Человек - зеркало, отражающий в своём поведении ту среду, в которой находится",
+    },
   ];
 
   return {
@@ -117,6 +151,6 @@ export const useGatesStore = defineStore("gates", () => {
     gatesSacralCenter,
     gatesSplenicCenter,
     gatesRootCenter,
-    centersNames
+    centersNames,
   };
 });

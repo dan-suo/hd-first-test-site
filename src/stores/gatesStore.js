@@ -103,6 +103,10 @@ export const useGatesStore = defineStore("gates", () => {
     { title: "Корневой центр", gates: gatesRootCenter }, 
   ];
 
+  const typesStorage = [
+    { title: "Манифестор", image: ""}
+  ];
+
   return {
     gatesHeadCenter,
     gatesAjnaCenter,

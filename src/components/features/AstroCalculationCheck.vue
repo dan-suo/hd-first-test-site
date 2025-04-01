@@ -3,7 +3,7 @@
     <!-- Ввод даты -->
     <v-row justify="center" class="mt-n10">
       <v-col cols="12" md="10">
-        <v-card-title class="text-body-1"
+        <v-card-title class="text-body-1 montserrat"
           >Для расчёта введите дату и время рождения в поле ниже и нажмите "рассчитать"
         </v-card-title>
         <v-text-field
@@ -162,6 +162,11 @@
             cols="12"
             class="d-flex justify-space-between align-self-start"
             ><span>Определённость :</span></v-col
+          >
+          <v-col
+            cols="12"
+            class="d-flex justify-space-between align-self-start"
+            ><v-btn variant="tonal" color="indigo-darken-4" to="/base-of-knowledge/types" append-icon="mdi-arrow-right">Узнать больше о вашем типе</v-btn></v-col
           >
         </v-row></v-col
       >

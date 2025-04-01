@@ -21,7 +21,7 @@
             </p>
         </v-card-text>
         <v-card-actions>
-            <v-btn variant="tonal" append-icon="mdi-arrow-right" class="px-5 py-2" color="deep-orange-lighten-1">Узнать больше</v-btn>
+            <v-btn variant="tonal" append-icon="mdi-arrow-right" class="px-5 py-2" color="deep-orange-lighten-1" to="/base-of-knowledge">Узнать больше</v-btn>
         </v-card-actions>
     </v-card-item>
   </v-card>

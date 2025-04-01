@@ -1,7 +1,7 @@
 <template>
   <v-container fluid class="mt-n10 container-of-content">
     <Breadcrumbs class="text-caption text-grey-darken-1" />
-    <v-sheet class="font-weight-bold text-h4 montserrat"
+    <v-sheet class="font-weight-bold text-h5 montserrat text-indigo-darken-3"
       >Расчёт рейв-карты</v-sheet
     ><AstroCalculationCheck></AstroCalculationCheck>
   </v-container>

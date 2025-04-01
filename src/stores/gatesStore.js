@@ -110,6 +110,7 @@ export const useGatesStore = defineStore("gates", () => {
       percentage: "9%",
       description:
         "От природы создан для инициативы, для того, чтобы запускать процессы и вовлекать в них других",
+        route: "/base-of-knowledge/types/manifestor",
     },
     {
       title: "Генератор",
@@ -117,6 +118,7 @@ export const useGatesStore = defineStore("gates", () => {
       percentage: "36%",
       description:
         "Созидатель, предназначенный творить, получая удовлетворение от процесса",
+        route: "/base-of-knowledge/types/generator",
     },
     {
       title: "Манифестирующий Генератор",
@@ -124,6 +126,7 @@ export const useGatesStore = defineStore("gates", () => {
       percentage: "34%",
       description:
         "Созидатель, предназначенный скорее доводить активность до логического завершения",
+        route: "/base-of-knowledge/types/manifesting-generator",
     },
     {
       title: "Проектор",
@@ -131,6 +134,7 @@ export const useGatesStore = defineStore("gates", () => {
       percentage: "20%",
       description:
         "От природы восприимчив, предназначен для распознания и направления других людей по корректному для их сути пути",
+        route: "/base-of-knowledge/types/projector",
     },
     {
       title: "Рефлектор",
@@ -138,6 +142,7 @@ export const useGatesStore = defineStore("gates", () => {
       percentage: "1%",
       description:
         "Человек - зеркало, отражающий в своём поведении ту среду, в которой находится",
+        route: "/base-of-knowledge/types/reflector",
     },
   ];
 
@@ -152,5 +157,6 @@ export const useGatesStore = defineStore("gates", () => {
     gatesSplenicCenter,
     gatesRootCenter,
     centersNames,
+    typesStorage,
   };
 });

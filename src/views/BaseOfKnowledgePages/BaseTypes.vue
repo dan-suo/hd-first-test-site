@@ -38,21 +38,76 @@
       который вы не выбираете, а получаете по факту рождения тем или той, кем вы
       являетесь.
     </v-sheet>
-    <v-sheet class="text-h6 text-indigo-darken-3 font-weight-bold montserrat opacity-80 mt-4"
+    <v-sheet
+      class="text-h6 text-indigo-darken-3 font-weight-bold montserrat opacity-80 mt-4"
       >Вкратце о роли каждого типа</v-sheet
     >
-    <div>
-        <v-card variant="flat">
-            <v-img height="150px"></v-img>
-        </v-card>
-    </div>
+    <v-container fluid>
+      <v-row class="mt-4" dense>
+        <v-col
+          v-for="item in hdDataStore.typesStorage"
+          :key="item.title"
+          cols="12"
+          sm="6"
+          md="4"
+          lg="4"
+          xl="4"
+        >
+          <v-card variant="flat" class="h-100 d-flex flex-column pa-4" hover>
+            <v-img height="150px" :src="item.image" class="align-end"> </v-img>
+            <v-card-title
+              class="text-center text-wrap"
+              :class="{ 'text-body-1 montserrat': item.title.length > 15 }"
+            >
+              {{ item.title }}
+            </v-card-title>
+
+            <v-card-subtitle class="px-4 pt-2">
+              {{ item.percentage }} населения
+            </v-card-subtitle>
+
+            <v-card-text class="px-4 pb-2 flex-grow-1">
+              {{ truncateDescription(item.description, 100) }}
+            </v-card-text>
+
+            <v-card-actions class="px-4 pb-4">
+              <v-btn
+                color="indigo-darken-3"
+                variant="outlined"
+                block
+                :to="item.route"
+              >
+                Подробнее
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-container>
 </template>
 
 <script setup>
+import { computed } from "vue";
+import { useRoute } from "vue-router";
 import { useGatesStore } from "@/stores/gatesStore";
 
+const route = useRoute();
 const hdDataStore = useGatesStore();
+
+// Функция для обрезки длинного описания
+const truncateDescription = (text, maxLength) => {
+  if (!text) return "";
+  return text.length > maxLength ? text.substring(0, maxLength) + "..." : text;
+};
+
+const typeData = computed(() => {
+  return (
+    hdDataStore.typesStorage.find(
+      (type) => type.route === `/base-of-knowledge/types/${route.params.id}`
+    ) || {}
+  );
+});
 </script>
 
 <style scoped>
@@ -63,5 +118,10 @@ const hdDataStore = useGatesStore();
   max-width: 1300px;
   margin: 0 auto;
   padding: 16px;
+}
+.text-wrap {
+  word-break: break-word;
+  white-space: normal;
+  line-height: 1.2;
 }
 </style>

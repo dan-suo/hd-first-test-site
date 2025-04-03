@@ -79,6 +79,13 @@ const routes = [
         meta: { title: "Профили" },
       },
       {
+        path: "profiles/:id",
+        name: "CurrentProfile",
+        component: () =>
+          import("@/views/BaseOfKnowledgePages/BaseOfKnowledgePagesProfiles/CurrentProfile.vue"),
+        meta: { title: "Описание профиля" },
+      },
+      {
         path: "planets",
         name: "Planets",
         component: () => import("@/views/BaseOfKnowledgePages/BasePlanets.vue"),

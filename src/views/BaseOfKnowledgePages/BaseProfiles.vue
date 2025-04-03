@@ -3,6 +3,22 @@
     <v-sheet class="text-h5 text-indigo-darken-3 font-weight-bold montserrat"
       >Профили в Дизайне Человека</v-sheet
     >
+    <v-card variant="outlined" class="mt-4 pa-3" color="indigo-lighten-4">
+      <v-card-item>
+        <v-card-text class="text-indigo-darken-4"
+          >Профиль показывает характерный для человека паттерн поведения,
+          которому он будет следовать на протяжении всей своей жизни. Именно
+          через призму своего Профиля каждый из нас реализует свой
+          Инкарнационный Крест. Чтобы определить свой Профиль, необходимо
+          взглянуть на Линии Гексаграмм (Ворот), которые активированы в
+          рейв-карте Солнцем и Землей.</v-card-text
+        >
+      </v-card-item>
+    </v-card>
+    <v-sheet class="text-h6 text-indigo-darken-3 font-weight-bold montserrat mt-4">Коротко о каждом профиле (листайте чтобы найти свой)</v-sheet>
+    <v-sheet class="text-body-2 text-indigo-darken-4 montserrat">Цифры, которые стоят рядом с каждым небесным телом — это номер Гексаграммы (Ворот), а после точки — номер Линии. Линия символизирует собой стадию развития энергии каждой Гексаграммы, которая активирована в вашей карте.
+
+В сочетании между собой, Линии Солнца / Земли со стороны Личности и со стороны Дизайна образуют 12 Профилей.</v-sheet>
     <!-- Слайдер с drag-прокруткой -->
     <div class="slider-wrapper mt-4">
       <div
@@ -13,7 +29,14 @@
         @dragscrollend="onDragEnd"
       >
         <div v-for="(profile, index) in profiles" :key="index" class="slide">
-          <v-card class="profile-card pa-4 pt-8" :to="profile.route" elevation="2" hover variant="flat" color="grey-lighten-5">
+          <v-card
+            class="profile-card pa-4 pt-8"
+            :to="profile.route"
+            elevation="2"
+            hover
+            variant="flat"
+            color="grey-lighten-4"
+          >
             <v-img
               :src="profile.images"
               :alt="profile.title"

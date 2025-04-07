@@ -63,13 +63,32 @@
       ></v-col>
       <v-col class="d-flex justify-center align-center montserrat" cols="4">
         <v-img
-          rounded="sm"
           src="@/assets/brain-space-img.jpg"
-          max-height="500"
+          max-height="600"
+          max-width="420"
+          rounded="xl"
+          cover
+          position="center"
         ></v-img>
       </v-col>
     </v-row>
   </v-container>
+  <v-divider class="mt-n16"></v-divider>
+  <v-container class="d-flex justify-center mt-4">
+    <v-card variant="flat" max-width="1130px">
+      <v-card-item>
+        <v-card-title class="text-h4 montserrat text-indigo">Практическая ценность Human Design<v-icon class="ml-16">mdi-chevron-down</v-icon></v-card-title>
+        <v-card-text class="mt-3 ml-n2 montserrat text-body-1">Грамотное знакомство со своим дизайном (а с этим я помогу) приносит главное - понимание и осознание "своих склонностей и лимитов",
+          своего "предназначения" в очень земном смысле - для чего я от природы "подхожу" и что для меня нормально, даже если это
+          отличается от общепринятых представлений. Для меня лично самое ценное это знание, закреплённое проверками, экспериментами, наблюдениями,
+          о том, "про что я изначально". Оно освобождает от излишних ожиданий и дарит фокус на нужном, на своём. <br><br>Это как в притче про
+          обезьяну и рыбу - если рыба будет жить, оценивая себя по способности быстро забраться на дерево - она проживёт всю жизнь,
+          считая себя неспособной дурой. ДЧ помогает каждому увидеть и протестировать "своё".
+        </v-card-text>
+      </v-card-item>
+    </v-card>
+  </v-container>
+  <v-container></v-container>
 </template>
 
 <script setup>

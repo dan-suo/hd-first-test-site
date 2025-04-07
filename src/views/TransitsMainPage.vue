@@ -1,13 +1,9 @@
 <template>
   <v-container fluid class=" container-of-content">
     <Breadcrumbs class="text-caption text-grey-darken-1" />
-    <v-sheet class="text-caption text-grey-darken-1"
-      >Тут пока нет никаких транзитов, конечно же, не так же сразу. Поэтому тут
-      мы потренируемся забирать инфу с сервера, который сами написали. Через
-      апи, который тоже сами писали. А данные лежат в монгузе, куда мы тоже сами
-      залезли. Сплошной бэкендовый кошмар фронтендера.
-    </v-sheet>
+    <FeatureTransitCalculation></FeatureTransitCalculation>
     <v-container v-if="isVisibleApiBlock">
+      <v-sheet class="text-caption text-grey-darken-1 mb-4">А тут потренируемся забирать данные из сервера, который связан с удалённой базой данных</v-sheet>
       <v-btn class="ml-6" color="primary" @click="createNewPost"
         >New Post</v-btn
       >
@@ -29,6 +25,7 @@
 
 <script setup>
 import Breadcrumbs from "@/components/common/Breadcrumbs.vue";
+import FeatureTransitCalculation from "@/components/features/FeatureTransitCalculation.vue"
 import { ref, onMounted } from "vue";
 import {
   fetchPosts,
